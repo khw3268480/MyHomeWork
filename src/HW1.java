@@ -228,6 +228,9 @@ public class HW1 {
 
         File file = new File(args[0]);
 
+        int argLength = args.length;
+        String[] searchingKey = new String[argLength - 2];
+
         double area = 0;
 
         String figureType = "";
@@ -244,56 +247,110 @@ public class HW1 {
         while (scanner.hasNextLine()) {
             Scanner line = new Scanner(scanner.nextLine());
             String command = args[1];
-            switch (command) {
-                case "print_info":
-                    figureType = line.next();
-                    switch (figureType) {
-                        case "원":
-                            Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
-                            area = circle.getArea();
-                            totalArea += area;
-                            setMaxMin(area);
-                            count+=1;
-                            break;
-                        case "타원":
-                            Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            area = ellipse.getArea();
-                            totalArea += area;
-                            setMaxMin(area);
-                            count+=1;
-                            break;
-                        case "사각형":
-                            Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            area = rectangle.getArea();
-                            totalArea += area;
-                            setMaxMin(area);
-                            count+=1;
-                            break;
-                        case "삼각형":
-                            Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            area = triangle.getArea();
-                            totalArea += area;
-                            setMaxMin(area);
-                            count+=1;
-                            break;
-                        case "사다리꼴":
-                            Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            area = trapezoid.getArea();
-                            totalArea += area;
-                            setMaxMin(area);
-                            count+=1;
-                            break;
-                        default:
-                            System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
-                            break;
+            if (command.equals("print_info")) {
+                figureType = line.next();
+                switch (figureType) {
+                    case "원":
+                        Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                        area = circle.getArea();
+                        totalArea += area;
+                        setMaxMin(area);
+                        count += 1;
+                        break;
+                    case "타원":
+                        Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        area = ellipse.getArea();
+                        totalArea += area;
+                        setMaxMin(area);
+                        count += 1;
+                        break;
+                    case "사각형":
+                        Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        area = rectangle.getArea();
+                        totalArea += area;
+                        setMaxMin(area);
+                        count += 1;
+                        break;
+                    case "삼각형":
+                        Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        area = triangle.getArea();
+                        totalArea += area;
+                        setMaxMin(area);
+                        count += 1;
+                        break;
+                    case "사다리꼴":
+                        Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        area = trapezoid.getArea();
+                        totalArea += area;
+                        setMaxMin(area);
+                        count += 1;
+                        break;
+                    default:
+                        System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
+                        break;
+                }
+//                case "print":
+//                    figureType = line.next();
+//                    String keyFirst = args[1];
+//                    String keySecond = args[2];
+//                    String keyThird = args[3];
+//                    String keyFourth = args[4];
+            } else if (command.equals("print")) {
+                for (int i = 2; i < argLength; i++) {
+                    if (!(args[i].equals("원") || args[i].equals("타원") || args[i].equals("삼각형") || args[i].equals("사각형") || args[i].equals("사다리꼴"))) {
+                        System.out.println("도형 종류 오류");
+                        return;
                     }
-                case "print":
-                    figureType = line.next();
-                    String keyFirst = args[1];
-                    String keySecond = args[2];
-                    String keyThird = args[3];
-                    String keyFourth = args[4];
+                    searchingKey[i - 2] = args[i];
+                }
+                figureType = line.next();
+                for (int i = 0; i < searchingKey.length; i++) {
+                    if (figureType.equals(searchingKey[i])) {
+                        switch (figureType) {
+                            case "원":
+                                Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                                area = circle.getArea();
+                                totalArea += area;
+                                setMaxMin(area);
+                                count += 1;
+                                break;
+                            case "삼각형":
+                                Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                area = triangle.getArea();
+                                totalArea += area;
+                                setMaxMin(area);
+                                count += 1;
+                                break;
+                            case "사각형":
+                                Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                area = rectangle.getArea();
+                                totalArea += area;
+                                setMaxMin(area);
+                                count += 1;
+                                break;
+                            case "사다리꼴":
+                                Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                area = trapezoid.getArea();
+                                totalArea += area;
+                                setMaxMin(area);
+                                count += 1;
+                                break;
+                            case "타원":
+                                Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                area = ellipse.getArea();
+                                totalArea += area;
+                                setMaxMin(area);
+                                count += 1;
+                                break;
+
+                        }
+                    }
+                }
+            } else {
+                System.out.println("없는 명령어");
+                return;
             }
+
         }
         Scanner scanner1 = new Scanner(file);
 
@@ -301,44 +358,72 @@ public class HW1 {
         while (scanner1.hasNextLine()) {
             Scanner line = new Scanner(scanner1.nextLine());
             String command = args[1];
-            switch (command) {
-                case "print_info":
-                    String figureType = line.next();
-                    switch (figureType) {
-                        case "원":
-                            Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
-                            System.out.println(circle.toString(circle.getArea() == maxArea, circle.getArea() == minArea));
-                            break;
-                        case "타원":
-                            Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            System.out.println(ellipse.toString(ellipse.getArea() == maxArea, ellipse.getArea() == minArea));
+            if (command.equals("print_info")) {
+                figureType = line.next();
+                switch (figureType) {
+                    case "원":
+                        Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(circle.toString(circle.getArea() == maxArea, circle.getArea() == minArea));
+                        break;
+                    case "타원":
+                        Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(ellipse.toString(ellipse.getArea() == maxArea, ellipse.getArea() == minArea));
 
-                            break;
-                        case "사각형":
-                            Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            System.out.println(rectangle.toString(rectangle.getArea() == maxArea, rectangle.getArea() == minArea));
-
-                            break;
-                        case "삼각형":
-                            Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            System.out.println(triangle.toString(triangle.getArea() == maxArea, triangle.getArea() == minArea));
-                            break;
-                        case "사다리꼴":
-                            Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                            System.out.println(trapezoid.toString(trapezoid.getArea() == maxArea, trapezoid.getArea() == minArea));
-
-                            break;
-                        default:
-                            System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
-                            break;
+                        break;
+                    case "사각형":
+                        Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(rectangle.toString(rectangle.getArea() == maxArea, rectangle.getArea() == minArea));
+                        break;
+                    case "삼각형":
+                        Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(triangle.toString(triangle.getArea() == maxArea, triangle.getArea() == minArea));
+                        break;
+                    case "사다리꼴":
+                        Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(trapezoid.toString(trapezoid.getArea() == maxArea, trapezoid.getArea() == minArea));
+                        break;
+                    default:
+                        System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
+                        break;
+                }
+            } else if (command.equals("print")) {
+                figureType = line.next();
+                for (int i = 0; i < searchingKey.length; i++) {
+                    if (searchingKey[i].equals(figureType)) {
+                        switch (figureType) {
+                            case "원":
+                                Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                                System.out.println(circle.toString(circle.getArea() == maxArea, circle.getArea() == minArea));
+                                break;
+                            case "타원":
+                                Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                System.out.println(ellipse.toString(ellipse.getArea() == maxArea, ellipse.getArea() == minArea));
+                                break;
+                            case "사각형":
+                                Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                System.out.println(rectangle.toString(rectangle.getArea() == maxArea, rectangle.getArea() == minArea));
+                                break;
+                            case "삼각형":
+                                Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                System.out.println(triangle.toString(triangle.getArea() == maxArea, triangle.getArea() == minArea));
+                                break;
+                            case "사다리꼴":
+                                Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                System.out.println(trapezoid.toString(trapezoid.getArea() == maxArea, trapezoid.getArea() == minArea));
+                                break;
+                            default:
+                                System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
+                                break;
+                        }
                     }
 
+                }
             }
 
         }
 
         System.out.println();
-        System.out.printf("평균 면적 : %.2f", totalArea/count);
+        System.out.printf("평균 면적 : %.2f", totalArea / count);
     }
 
 }

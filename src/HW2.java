@@ -3,133 +3,117 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+class Account {
+
+    String uuid, name, sex, phoneNumber, address, createDate, purpose;
+    String bankbookNumber;
+
+    Account account;
+    int money;
+
+    public Account(String purpose, String bankBookNumber, String createDate, int money) {
+        this.money = money;
+        this.bankbookNumber = bankBookNumber;
+        this.createDate = createDate;
+        this.purpose = purpose;
+    }
+
+    public Account(String uuid, String name, String sex, String phoneNumber, String address, Account accounts) {
+        this.uuid = uuid;
+        this.name = name;
+        this.sex = sex;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.purpose = accounts.getPurpose();
+        this.bankbookNumber = accounts.getBankbookNumber();
+        this.money = accounts.getMoney();
+        this.createDate = accounts.getCreateDate();
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public String getBankbookNumber() {
+        return bankbookNumber;
+    }
+    public String getCreateDate() {
+        return createDate;
+    }
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
 public class HW2 {
     public static void main(String[] args) throws FileNotFoundException {
 
-        File file = new File(args[0]);
+        File accountFile = new File(args[0]);
+        File customerFile = new File(args[1]);
 
-        int lineCount = 0;
+        int accountInfoCount = 0;
 
-        if (!file.exists()){
-            System.out.printf("데이터 파일(%s)을 찾을 수 없음 !!!", args[0]);
+        if (!accountFile.exists() || !customerFile.exists()) {
+            System.out.println("잘못된 파일");
             return;
         }
 
-        Scanner in = new Scanner(file);
+        Scanner scanner = new Scanner(accountFile);
 
-        // 줄 갯수 확인
-        while (in.hasNextLine()) {
-            Scanner scn = new Scanner(in.nextLine());
-            lineCount++;
+        // customer 정보 파일 줄 수
+        while (scanner.hasNextLine()) {
+            accountInfoCount++;
+            scanner.nextLine();
         }
 
-        String[][] studentInfo = new String[lineCount][6];
+//        int dataLength = customerInfoCount;
+        Account[] banks = new Account[accountInfoCount];
+        Account[] accounts = new Account[accountInfoCount];
 
-        Scanner in2 = new Scanner(new File(args[0]));
+        String[] bankBooks = new String[accountInfoCount];
 
-        double sum = 0, korean = 0, english = 0, mathematics = 0;
+        Scanner accountScanner = new Scanner(accountFile);
 
-        for (int i = 0; i < lineCount; i++) {
-            Scanner scanner2 = new Scanner(in2.nextLine());
-            for (int j = 0; j < 5; j++) {
-                studentInfo[i][j] = scanner2.next();
-                if (j == 2 || j == 3 || j == 4) {
-                    sum += Double.parseDouble(studentInfo[i][j]);
+        int a = 0;
+
+        while (accountScanner.hasNextLine()) {
+            Scanner accountLine = new Scanner(accountScanner.nextLine());
+            String purpose = accountLine.next();
+            String bankBookNumber = accountLine.next();
+            String createDate = accountLine.next();
+            String money = accountLine.next();
+            banks[a] = new Account(purpose, bankBookNumber, createDate, Integer.parseInt(money));
+            bankBooks[a] = bankBookNumber;
+            a += 1;
+        }
+
+        Scanner customerScanner = new Scanner(customerFile);
+
+        while (customerScanner.hasNextLine()) {
+            Scanner customerLine = new Scanner(customerScanner.nextLine());
+            String uuid = customerLine.next();
+            String name = customerLine.next();
+            String sex = customerLine.next();
+            String phoneNumber = customerLine.next();
+            String address = customerLine.next();
+//            System.out.println(String.format("%s %s %s %s %s", uuid, name, sex ,phoneNumber, address));
+            while (customerLine.hasNext()) {
+                String banknum = customerLine.next();
+                for (int i = 0; i < banks.length; i++) {
+                    if (banks[i].getBankbookNumber().equals(banknum)) {
+//                        System.out.println(String.format("%s의 계좌번호는 %s이름의 계좌입니다. i = %d", banknum, name, i));
+                        accounts[i] = new Account(uuid, name, sex, phoneNumber, address, banks[i]);
+                    }
                 }
-                if (j == 2) {
-                    korean += Double.parseDouble(studentInfo[i][2]);
-                }
-                if (j == 3) {
-                    english += Double.parseDouble(studentInfo[i][3]);
-                }
-                if (j == 4) {
-                    mathematics += Double.parseDouble(studentInfo[i][4]);
-                }
-                if (j == 4) {
-                    studentInfo[i][5] = String.valueOf(sum / 3);
-                }
-            }
-            sum = 0;
-        }
-        korean /= lineCount;
-        english /= lineCount;
-        mathematics /= lineCount;
-
-        double maxAverage = 0;
-        double minAverage = 0;
-        double temp = 0;
-        int maxCount = 0, minCount = 0;
-
-        System.out.println("학번 \t이름 국어 영어 수학 평균");
-
-        for (int i = 0; i < lineCount; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(String.format("%s ", studentInfo[i][j]));
-            }
-            System.out.printf("%.2f", Double.parseDouble(studentInfo[i][5]));
-            System.out.println();
-        }
-        maxAverage = Double.parseDouble(studentInfo[0][5]);
-        minAverage = Double.parseDouble(studentInfo[0][5]);
-        System.out.println(String.format("과목 평균   %.2f %.2f %.2f", korean, english, mathematics));
-        for (int i = 0; i < lineCount; i++) {
-            if (maxAverage <= Double.parseDouble(studentInfo[i][5])) {
-                maxAverage = Double.parseDouble(studentInfo[i][5]);
-            }
-            if (minAverage >= Double.parseDouble(studentInfo[i][5])) {
-                minAverage = Double.parseDouble(studentInfo[i][5]);
             }
         }
-        for (int i = 0; i < lineCount; i++) {
-            if (maxAverage == Double.parseDouble(studentInfo[i][5])) {
-                maxCount++;
-            }
-            if (minAverage == Double.parseDouble(studentInfo[i][5])) {
-                minCount++;
-            }
-        }
-
-        String[] maxAverageArray = new String[maxCount];
-        String[] minAverageArray = new String[minCount];
-
-        int tempVar =0 ;
-
-        for (int i = 0; i < lineCount; i++){
-            if (maxAverage == Double.parseDouble(studentInfo[i][5])) {
-                maxAverageArray[tempVar] = String.format("%s(%s)", studentInfo[i][0],studentInfo[i][1]);
-                tempVar++;
-            }
-        }
-        System.out.print(String.format("최고 평균 : "));
-        for (int i = 0; i < maxCount; i++){
-            if ( i == maxCount-1){
-                System.out.printf("%s", maxAverageArray[i]);
-
-            }
-            else{
-                System.out.printf("%s, ", maxAverageArray[i]);
-
-            }
-        }
-
-        tempVar = 0;
-        for (int i = 0; i < lineCount; i++){
-            if (minAverage == Double.parseDouble(studentInfo[i][5])) {
-                minAverageArray[tempVar] = String.format("%s(%s)", studentInfo[i][0],studentInfo[i][1]);
-                tempVar++;
-            }
-        }
-        System.out.print(String.format("\n최저 평균 : "));
-
-        for (int i = 0; i < minCount; i++){
-            if ( i == minCount-1){
-                System.out.printf("%s", minAverageArray[i]);
-
-            }
-            else{
-                System.out.printf("%s, ", minAverageArray[i]);
-
-            }
-        }
+        System.out.println(accounts[2].getPurpose());
     }
+
+    /** 유저 정보 입력 완료 */
+
 }
