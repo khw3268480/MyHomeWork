@@ -1,34 +1,47 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.WeakHashMap;
 
-class Ellipse {
-    final static float PI = 3.1415f;
-    String name = "None";
-    int x, y, longRadius, shortRadius;
+class Figure {
+    String name;
+    int x, y;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
+}
+
+
+class Triangle extends Figure {
+
+    int width, height;
+
     double area;
 
-    public Ellipse() {
-        area = x = y = longRadius = shortRadius = 0;
-    }
-
-    public Ellipse(int x, int y) {
-        this();
-        this.x = x;
-        this.y = y;
-    }
-
-    public Ellipse(String n, int xx, int yy, int longRadius, int shortRadius) {
-        this(xx, yy);
-        this.longRadius = longRadius;
-        this.shortRadius = shortRadius;
+    public Triangle(int x, int y, int width, int height) {
+        super.x = x;
+        super.y = y;
+        super.name = "삼각형";
+        this.width = width;
+        this.height = height;
         setArea();
-        name = n;
+    }
+
+    public Triangle() {
+
     }
 
     private void setArea() {
-        area = PI * longRadius * shortRadius;
+        area = (double) (width * height) / 2;
     }
 
     public double getArea() {
@@ -36,37 +49,95 @@ class Ellipse {
     }
 
     public String toString(boolean isMax, boolean isMin) {
-        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 반지름[%d] 짧은반지름[%d] 면적[%.2f]", name, x, y, longRadius, shortRadius, area);
+        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 밑변[%d] 높이[%d] 면적[%.2f]", getName(), getX(), getY(), width, height, area);
     }
 
-    public static float AvgArea(Circle[] cir) {
-        float sum = 0;
-        for (Circle c : cir) sum += c.area;
-        return sum / cir.length;
-    }
 }
 
-class Circle {
-    final static float PI = 3.1415f;
-    String name = "None";
-    int x, y, radius;
+class Rectangle extends Triangle {
+
+    int width, height;
+
     double area;
 
-    public Circle() {
-        area = x = y = radius = 0;
+    public Rectangle(int x, int y, int width, int height) {
+        super();
+        super.x = x;
+        super.y = y;
+        super.name = "사각형";
+        this.width = width;
+        this.height = height;
+        setArea();
     }
 
-    public Circle(int x, int y) {
-        this();
-        this.x = x;
-        this.y = y;
+    public Rectangle() {
+        super();
     }
 
-    public Circle(String n, int xx, int yy, int r) {
-        this(xx, yy);
+    private void setArea() {
+        area = (double) (width * height);
+    }
+
+    public double getArea() {
+        return this.area;
+    }
+
+    public String toString(boolean isMax, boolean isMin) {
+        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 가로[%d] 세로[%d] 면적[%.2f]", getName(), getX(), getY(), this.width, this.height, area);
+    }
+
+}
+
+class Trapezoid extends Rectangle {
+
+    int upWidth, downWidth, height;
+
+    double area;
+
+    public Trapezoid(int x, int y, int upWidth, int downWidth, int height) {
+        super();
+        super.x = x;
+        super.y = y;
+        super.name = "사다리꼴";
+        this.upWidth = upWidth;
+        this.downWidth = downWidth;
+        this.height = height;
+        setArea();
+    }
+
+    private void setArea() {
+        area = (double) (upWidth + downWidth) * height / 2;
+    }
+
+    public double getArea() {
+        return this.area;
+    }
+
+    public String toString(boolean isMax, boolean isMin) {
+        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 가로[%d] 짧은가로[%d] 면적[%.2f]", getName(), getX(), getY(), this.upWidth, this.downWidth, area);
+    }
+
+}
+
+class Circle extends Figure {
+    final static float PI = 3.1415f;
+    int radius;
+    double area;
+
+    public Circle(int xx, int yy, int r) {
         radius = r;
         setArea();
-        name = n;
+        super.x = xx;
+        super.y = yy;
+        super.name = "원";
+    }
+
+    public Circle(int xx, int yy, double area) {
+        this.area = area;
+        super.x = xx;
+        super.y = yy;
+        super.name = "타원";
+
     }
 
     private void setArea() {
@@ -78,7 +149,7 @@ class Circle {
     }
 
     public String toString(boolean isMax, boolean isMin) {
-        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 반지름[%d], 면적[%.2f]", name, x, y, radius, area);
+        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 반지름[%d] 면적[%.2f]", getName(), getX(), getY(), radius, area);
     }
 
     public static float AvgArea(Circle[] cir) {
@@ -88,112 +159,25 @@ class Circle {
     }
 }
 
-class Triangle {
-    String name = "None";
-    int x, y, width, height;
+class Oval extends Circle {
+
     double area;
 
-    public Triangle() {
-        area = x = y = width = height = 0;
-    }
+    int longRadius, shortRadius;
 
-    public Triangle(int x, int y) {
-        this();
-        this.x = x;
-        this.y = y;
-    }
-
-    public Triangle(String n, int xx, int yy, int w, int h) {
-        this(xx, yy);
-        height = h;
-        width = w;
-        setArea();
-        name = n;
-    }
-
-    private void setArea() {
-        area = (double) (width * height) / 2;
-    }
-
-    double getArea() {
-        return this.area;
+    public Oval(int xx, int yy, int longRadius, int shortRadius) {
+        super(xx, yy, PI * longRadius * shortRadius);
+        this.area = PI * longRadius * shortRadius;
+        this.longRadius = longRadius;
+        this.shortRadius = shortRadius;
     }
 
     public String toString(boolean isMax, boolean isMin) {
-        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 밑변[%d] 높이[%d] 면적[%.2f]", name, x, y, width, height, area);
-    }
-}
-
-class Trapezoid {
-    String name = "None";
-    int x, y, upSide, downSide, height;
-    double area;
-
-    public Trapezoid() {
-        area = x = y = upSide = downSide = height = 0;
+        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 반지름[%d] 짧은반지름[%d] 면적[%.2f]", getName(), getX(), getY(), this.longRadius, this.shortRadius, area);
     }
 
-    public Trapezoid(int x, int y) {
-        this();
-        this.x = x;
-        this.y = y;
-    }
-
-    public Trapezoid(String n, int xx, int yy, int up, int down, int h) {
-        this(xx, yy);
-        height = h;
-        upSide = up;
-        downSide = down;
-        setArea();
-        name = n;
-    }
-
-    private void setArea() {
-        area = (double) ((upSide + downSide) * height) / 2;
-    }
-
-    double getArea() {
-        return this.area;
-    }
-
-    public String toString(boolean isMax, boolean isMin) {
-        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 가로[%d] 짧은가로[%d] 높이[%d] 면적[%.2f]", name, x, y, upSide, downSide, height, area);
-    }
-}
-
-class Rectangle {
-    String name = "None";
-    int x, y, width, height;
-    double area;
-
-    public Rectangle() {
-        area = x = y = width = height = 0;
-    }
-
-    public Rectangle(int x, int y) {
-        this();
-        this.x = x;
-        this.y = y;
-    }
-
-    public Rectangle(String n, int xx, int yy, int w, int h) {
-        this(xx, yy);
-        height = h;
-        width = w;
-        setArea();
-        name = n;
-    }
-
-    private void setArea() {
-        area = width * height;
-    }
-
-    double getArea() {
-        return this.area;
-    }
-
-    public String toString(boolean isMax, boolean isMin) {
-        return String.format((isMax ? "L " : "") + (isMin ? "S " : "") + "%s-[X:%d, Y:%d] 가로[%d] 세로[%d] 면적[%.2f]", name, x, y, width, height, area);
+    public double getArea() {
+        return area;
     }
 }
 
@@ -251,35 +235,35 @@ public class HW1 {
                 figureType = line.next();
                 switch (figureType) {
                     case "원":
-                        Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                        Circle circle = new Circle(line.nextInt(), line.nextInt(), line.nextInt());
                         area = circle.getArea();
                         totalArea += area;
                         setMaxMin(area);
                         count += 1;
                         break;
                     case "타원":
-                        Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                        area = ellipse.getArea();
+                        Oval oval = new Oval(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        area = oval.getArea();
                         totalArea += area;
                         setMaxMin(area);
                         count += 1;
                         break;
                     case "사각형":
-                        Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Rectangle rectangle = new Rectangle(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         area = rectangle.getArea();
                         totalArea += area;
                         setMaxMin(area);
                         count += 1;
                         break;
                     case "삼각형":
-                        Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Triangle triangle = new Triangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         area = triangle.getArea();
                         totalArea += area;
                         setMaxMin(area);
                         count += 1;
                         break;
                     case "사다리꼴":
-                        Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Trapezoid trapezoid = new Trapezoid(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         area = trapezoid.getArea();
                         totalArea += area;
                         setMaxMin(area);
@@ -289,12 +273,13 @@ public class HW1 {
                         System.out.println("잘못된 형식의 도형이 입력되었습니다. 파일을 확인해주십시오.");
                         break;
                 }
-//                case "print":
-//                    figureType = line.next();
-//                    String keyFirst = args[1];
-//                    String keySecond = args[2];
-//                    String keyThird = args[3];
-//                    String keyFourth = args[4];
+
+////                case "print":
+////                    figureType = line.next();
+////                    String keyFirst = args[1];
+////                    String keySecond = args[2];
+////                    String keyThird = args[3];
+////                    String keyFourth = args[4];
             } else if (command.equals("print")) {
                 for (int i = 2; i < argLength; i++) {
                     if (!(args[i].equals("원") || args[i].equals("타원") || args[i].equals("삼각형") || args[i].equals("사각형") || args[i].equals("사다리꼴"))) {
@@ -308,36 +293,36 @@ public class HW1 {
                     if (figureType.equals(searchingKey[i])) {
                         switch (figureType) {
                             case "원":
-                                Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                                Circle circle = new Circle(line.nextInt(), line.nextInt(), line.nextInt());
                                 area = circle.getArea();
                                 totalArea += area;
                                 setMaxMin(area);
                                 count += 1;
                                 break;
                             case "삼각형":
-                                Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Triangle triangle = new Triangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 area = triangle.getArea();
                                 totalArea += area;
                                 setMaxMin(area);
                                 count += 1;
                                 break;
                             case "사각형":
-                                Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Rectangle rectangle = new Rectangle(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 area = rectangle.getArea();
                                 totalArea += area;
                                 setMaxMin(area);
                                 count += 1;
                                 break;
                             case "사다리꼴":
-                                Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Trapezoid trapezoid = new Trapezoid(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 area = trapezoid.getArea();
                                 totalArea += area;
                                 setMaxMin(area);
                                 count += 1;
                                 break;
                             case "타원":
-                                Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                                area = ellipse.getArea();
+                                Oval oval = new Oval(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                area = oval.getArea();
                                 totalArea += area;
                                 setMaxMin(area);
                                 count += 1;
@@ -362,24 +347,24 @@ public class HW1 {
                 figureType = line.next();
                 switch (figureType) {
                     case "원":
-                        Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                        Circle circle = new Circle(line.nextInt(), line.nextInt(), line.nextInt());
                         System.out.println(circle.toString(circle.getArea() == maxArea, circle.getArea() == minArea));
                         break;
                     case "타원":
-                        Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
-                        System.out.println(ellipse.toString(ellipse.getArea() == maxArea, ellipse.getArea() == minArea));
+                        Oval oval = new Oval(line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        System.out.println(oval.toString(oval.getArea() == maxArea, oval.getArea() == minArea));
 
                         break;
                     case "사각형":
-                        Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Rectangle rectangle = new Rectangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         System.out.println(rectangle.toString(rectangle.getArea() == maxArea, rectangle.getArea() == minArea));
                         break;
                     case "삼각형":
-                        Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Triangle triangle = new Triangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         System.out.println(triangle.toString(triangle.getArea() == maxArea, triangle.getArea() == minArea));
                         break;
                     case "사다리꼴":
-                        Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                        Trapezoid trapezoid = new Trapezoid( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                         System.out.println(trapezoid.toString(trapezoid.getArea() == maxArea, trapezoid.getArea() == minArea));
                         break;
                     default:
@@ -392,23 +377,23 @@ public class HW1 {
                     if (searchingKey[i].equals(figureType)) {
                         switch (figureType) {
                             case "원":
-                                Circle circle = new Circle("원", line.nextInt(), line.nextInt(), line.nextInt());
+                                Circle circle = new Circle(line.nextInt(), line.nextInt(), line.nextInt());
                                 System.out.println(circle.toString(circle.getArea() == maxArea, circle.getArea() == minArea));
                                 break;
                             case "타원":
-                                Ellipse ellipse = new Ellipse("타원", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Oval ellipse = new Oval( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 System.out.println(ellipse.toString(ellipse.getArea() == maxArea, ellipse.getArea() == minArea));
                                 break;
                             case "사각형":
-                                Rectangle rectangle = new Rectangle("사각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Rectangle rectangle = new Rectangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 System.out.println(rectangle.toString(rectangle.getArea() == maxArea, rectangle.getArea() == minArea));
                                 break;
                             case "삼각형":
-                                Triangle triangle = new Triangle("삼각형", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Triangle triangle = new Triangle( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 System.out.println(triangle.toString(triangle.getArea() == maxArea, triangle.getArea() == minArea));
                                 break;
                             case "사다리꼴":
-                                Trapezoid trapezoid = new Trapezoid("사다리꼴", line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
+                                Trapezoid trapezoid = new Trapezoid( line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt(), line.nextInt());
                                 System.out.println(trapezoid.toString(trapezoid.getArea() == maxArea, trapezoid.getArea() == minArea));
                                 break;
                             default:
