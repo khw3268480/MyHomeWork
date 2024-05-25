@@ -136,6 +136,17 @@ class Triangle2 extends Figure2 {
         super.area = area;
     }
 
+    public Triangle2(int x, int y, int width, int height, String name) {
+        super.x = x;
+        super.y = y;
+        super.width = width;
+        super.height = height;
+        super.name = name;
+        this.width = width;
+        this.height = height;
+        super.area = area;
+    }
+
 
     private void setArea() {
         area = (double) (width * height) / 2;
@@ -160,7 +171,7 @@ class Rectangle2 extends Triangle2 {
     double area;
 
     public Rectangle2(int x, int y, int width, int height) {
-        super(x, y, width, height, 0);
+        super(x, y, width, height, "사각형");
         super.x = x;
         super.y = y;
         super.name = "사각형";
